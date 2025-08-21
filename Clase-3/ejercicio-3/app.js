@@ -7,10 +7,8 @@ window.addEventListener("mousedown", function(eventData) {
         ".rectangulo", 
         {
             x: 500,
-            y:100,
             duration: 5,
             ease: "bounce.in",
-            onComplete: function() {
         }
     );
 });
