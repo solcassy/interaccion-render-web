@@ -9,7 +9,16 @@ window.addEventListener("mousedown", function(eventData) {
         {
             y: -300,
             duration: 5,
-            ease: "bounce.in",
+            ease: "back.out",
         }
     );
+    gsap.to(
+        "body", 
+        {
+            backgroundColor: "#A3D5FF",
+            duration: 5,
+            ease: "power2.out",
+        }
+    );
+  
 });
