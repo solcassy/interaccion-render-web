@@ -5,21 +5,15 @@
     box-sizing: border-box;
 }
 
-body {
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-}
-
 #lienzo{
-    position: fixed;
     top: 0px;
     left: 0px;
-    width: 100vw;
-    height: 100vh;
-    background-color: #87CEEB;
-    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    background-color: #fcac3d;
+    margin: 10px;
+    padding: 50px;
 }
-
 .rectangulo{
     position: absolute;
     bottom: -40px;
@@ -28,28 +22,4 @@ body {
     height: 300px;
     background-color: #608ffe;
     border-radius: 50px;
-    opacity: 0.3;
-}
-
-/* Instrucciones para el usuario */
-.instructions {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 15px;
-    border-radius: 10px;
-    font-size: 14px;
-    z-index: 100;
-    max-width: 300px;
-}
-
-.instructions h3 {
-    margin-bottom: 10px;
-    color: #90EE90;
-}
-
-.instructions p {
-    margin-bottom: 5px;
 }
