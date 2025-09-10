@@ -218,6 +218,28 @@ const mediocirculo2 = {
 }
 mediocirculo2.dibujar(window.innerWidth/2,400);
 
+const linea = {
+    colorLinea: "black",
+    grosorLinea: 3,
+    x1: 0,
+    y1: 0,
+    x2: 0,
+    y2: 0,
+    dibujar: function(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.strokeStyle = linea.colorLinea;
+        ctx.lineWidth = linea.grosorLinea;
+        
+        // Move to starting point
+        ctx.moveTo(x1, y1);
+        // Draw line to end point
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+    }
+}
+
+
+
 
 
 
