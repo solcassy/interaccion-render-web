@@ -24,6 +24,66 @@ renderer.setClearColor(0x000011); // color de fondo oscuro
 // Posicionar la cámara (más cerca del sistema)
 camera.position.z = 8;
 
+// ===== CONTROLES DE CÁMARA CON MOUSE (drag + wheel) =====
+// Órbita simple alrededor del origen (el sol) sin librerías externas
+let isDragging = false;
+let lastMouseX = 0;
+let lastMouseY = 0;
+
+// Usamos coordenadas esféricas para orbitar alrededor del origen
+const spherical = new THREE.Spherical();
+spherical.setFromVector3(camera.position.clone());
+let radius = spherical.radius; // distancia de la cámara al origen
+let polar = spherical.phi;     // inclinación
+let azimuth = spherical.theta; // rotación horizontal
+
+function updateCameraFromSpherical() {
+	// Limitar ángulos para evitar voltear la cámara
+	const minPolar = 0.1;
+	const maxPolar = Math.PI - 0.1;
+	polar = Math.max(minPolar, Math.min(maxPolar, polar));
+
+	spherical.radius = Math.max(2, Math.min(60, radius));
+	spherical.phi = polar;
+	spherical.theta = azimuth;
+
+	const pos = new THREE.Vector3().setFromSpherical(spherical);
+	camera.position.copy(pos);
+	camera.lookAt(0, 0, 0);
+}
+
+canvas.addEventListener('mousedown', (e) => {
+	isDragging = true;
+	lastMouseX = e.clientX;
+	lastMouseY = e.clientY;
+});
+
+window.addEventListener('mouseup', () => {
+	isDragging = false;
+});
+
+window.addEventListener('mousemove', (e) => {
+	if (!isDragging) return;
+	const deltaX = e.clientX - lastMouseX;
+	const deltaY = e.clientY - lastMouseY;
+
+	const rotateSpeed = 0.005;
+	azimuth -= deltaX * rotateSpeed;
+	polar -= deltaY * rotateSpeed;
+
+	lastMouseX = e.clientX;
+	lastMouseY = e.clientY;
+
+	updateCameraFromSpherical();
+});
+
+canvas.addEventListener('wheel', (e) => {
+	e.preventDefault();
+	const zoomFactor = 1 + (e.deltaY > 0 ? 0.1 : -0.1);
+	radius *= zoomFactor;
+	updateCameraFromSpherical();
+}, { passive: false });
+
 // ===== CREAR EL SOL =====
 
 // 1. Definir la geometría del sol (esfera más grande)
@@ -92,25 +152,22 @@ const starfield = new THREE.Mesh(starfieldGeometry, starfieldMaterial);
 // Agregar el fondo a la escena
 scene.add(starfield);
 
-// Crear estrellas individuales
-const starsGeometry = new THREE.BufferGeometry();
-const starsCount = 1000;
-const starsPositions = new Float32Array(starsCount * 3);
+// Crear estrellas individuales (como esferas)
+const sphereStarsCount = 600; // menor cantidad que puntos para rendimiento
+const stars = new THREE.Group(); // mantener nombre `stars` usado en la animación
+const starSphereGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+const starSphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
-for (let i = 0; i < starsCount * 3; i++) {
-    starsPositions[i] = (Math.random() - 0.5) * 100; // posición aleatoria
+for (let i = 0; i < sphereStarsCount; i++) {
+	const star = new THREE.Mesh(starSphereGeometry, starSphereMaterial);
+	// distribución aleatoria en un cubo alrededor del origen
+	star.position.set(
+		(Math.random() - 0.5) * 100,
+		(Math.random() - 0.5) * 100,
+		(Math.random() - 0.5) * 100
+	);
+	stars.add(star);
 }
-
-starsGeometry.setAttribute('position', new THREE.BufferAttribute(starsPositions, 3));
-
-const starsMaterial = new THREE.PointsMaterial({
-    color: 0xffffff,
-    size: 0.5,
-    transparent: true,
-    opacity: 0.8
-});
-
-const stars = new THREE.Points(starsGeometry, starsMaterial);
 scene.add(stars);
 
 // ===== CREAR PLANETAS =====
@@ -226,7 +283,7 @@ const brightWhiteLight = new THREE.PointLight(0xFF6600, 55.0, 20);
 brightWhiteLight.position.set(2, 2, 2); // posición diagonal
 
 // Luz naranja por debajo y atrás del sol
-const backOrangeLight = new THREE.PointLight(0xffff00, 30.0, 18);
+const backOrangeLight = new THREE.PointLight(0xFFC370, 30.0, 18);
 backOrangeLight.position.set(0, -3, -2); // posición debajo y atrás del sol
 
 // 6. Agregar todas las luces a la escena
