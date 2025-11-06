@@ -7,12 +7,12 @@ var lastPos ={
 }
 
 var imagesList = [
-    './assets/p1.jpg',
-    './assets/p2.jpg',
-    './assets/p3.jpg',
-    './assets/p4.jpg',
-    './assets/p5.jpg',
-    './assets/p6.jpg'
+    './assets/img1.jpg',
+    './assets/img2.jpg',
+    './assets/img3.jpg',
+    './assets/img4.jpg',
+    './assets/img5.jpg',
+    './assets/img6.jpg'
  
 ];
 var index = 0;
