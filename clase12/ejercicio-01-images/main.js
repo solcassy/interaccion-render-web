@@ -38,6 +38,7 @@ function createFloatingImage(posX, posY) {
     img.style.left = posX - (113.5) + 'px';
     img.style.position = 'absolute';
     img.style.opacity = 0;
+    img.style.zIndex = Math.random() * 1000;
     document.body.appendChild(img);
     
     gsap.to(img, {
